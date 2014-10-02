@@ -34,7 +34,6 @@ conf/shark-env.sh
 *.DS_Store
 
 # latex files
-paper.pdf
 paper.blg
 paper.bbl
 paper.aux
