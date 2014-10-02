@@ -86,7 +86,7 @@ Our project lies at the intersection of scientific databases and big data analyt
 \section{BlinkDB Extension}
 To add matrix operations to BlinkDB, we will need to both implement the underlying mathematical algorithms, as well as change the query language to support these operations. 
 \subsection{Proposed Work}
-We propose introducing functions to both transform a selection of data into a matrix, as well as to run matrix operations on this data. The current SQL specification implemented in BlinkDB does not offer any way to specify matrix operations, thus we will have to create new schema to do so. For our purposes we will assume that we require all matrices to be stored in a the database and we will not accept them at query-time. One possibility is to nest functions and provide a function that refers to matrices, for example, to calculate the total value of an inventory. In addition, we will annotate matrix operations with an error bound or a time constraint. For example,
+We propose introducing functions to both transform a selection of data into a matrix, as well as to run matrix operations on this data. The current SQL specification implemented in BlinkDB does not offer any way to specify matrix operations, thus we will have to create new schema to do so. For our purposes we will assume that we require all matrices to be stored in the database and we will not accept them at query-time. One possibility is to nest functions and provide a function that refers to matrices, for example, to calculate the total value of an inventory. In addition, we will annotate matrix operations with an error bound or a time constraint. For example,
 
 \begin{verbatim}
 SELECT DOTPROD(VEC(prices), VEC(counts))
@@ -110,23 +110,23 @@ We will propose approximation techniques for fast processing of matrix operation
 
 \subsection{Timeline}
 
-The initial stage of our project will concern itself with two goals. First, we will familiarize ourselves with the BlinkDB system so that we can extend it. We estimate that this will take a bout a month. Second, we will search the literature for approximation techniques for matrix operations that are suitable for the problem in question. The first part of this goal will be to determine the range of operations that are feasible to execute for BlinkDB. We expect that this substage will take around one to two weeks. The second part of this goal will be understand the relevant algorithms more deeply and figure out conceptually how to implement the algorithms. We expect this substage to take two to three weeks.
+The initial stage of our project will concern itself with two goals. First, we will familiarize ourselves with the BlinkDB system so that we can extend it. We estimate that this will take about a month. Second, we will search the literature for approximation techniques for matrix operations that are suitable for the problem in question. The first part of this goal will be to determine the range of operations that are feasible to execute for BlinkDB. We expect that this substage will take around one to two weeks. The second part of this goal will be to understand the relevant algorithms more deeply and figure out conceptually how to implement the algorithms. We expect this substage to take two to three weeks.
 
-In the second stage of our project, we will implement the algorithms and run experiments. One key feature of this stage is that we hope to compare experimentally the suitability of various algorithms for use in BlinkDB. This will take the remainder of the semester. 
+In the second stage of our project, we will implement the algorithms and run experiments. This will take the remainder of the semester. 
 
 \section{Testing}
 
 \subsection{Proposed Work}
-To evaluate our extension, we will need testing data for our system. We plan to attempt to integrate SciDB's testing framework into our own benchmarks. SciDB is a now commercial database that bases its underlying structure on matricies, and thus requires matrix operations for test. We also plan to develop our own testing metrics based on expected use cases.
+To evaluate our extension, we will need testing data for our system. We plan to attempt to integrate SciDB's testing framework into our own benchmarks. SciDB is a commercial database that bases its underlying structure on matricies, and thus requires matrix operations for test. We also plan to develop our own testing metrics based on expected use cases.
 
 For actual testing we will run BlinkDB in both standalone and distributed mode. BlinkDB is designed to excel at combing through large data quickly, and thus we will need a large database to test our implementation. We plan to use Amazon Web Services to provide cluster computing nodes for our test. Using a cluster of 10 
 t2.medium instances for 24 hours of computation will cost approximately \$12.50, not including EBS costs. We think this cost is within an acceptable personal budget, but if we require additional nodes or compute time we will attempt to pursue funding via the university if possible.
 
 \subsection{Potential Roadblocks}
-We expect the majority of testing roadblocks will come from the complexity of deploying BlinkDB on a cluster of machines. Neither of us have significant experience with distributed cloud computing, although we have worked with Amazon Web Services before. Additionally, because we are developing a system for linear matrix operators, traditional test benchmarks like TPC-H are likely not usable in our case. Because SciDB is now a proprietry system it may also be difficult to aquire any testing insights or data they may use.
+We expect the majority of testing roadblocks will come from the complexity of deploying BlinkDB on a cluster of machines. Neither of us have significant experience with distributed cloud computing, although we have worked with Amazon Web Services before. Additionally, because we are developing a system for linear matrix operations, traditional test benchmarks like TPC-H are likely not usable in our case. Because SciDB is now a proprietry system it may also be difficult to aquire any testing insights or data they may use.
 
 \section{Conclusion}
-By extending BlinkDB to include linear matrix operators we hope to allow users to generate more expressive queries in a shorter time period on large datasets. Current aggregate functions offer a limited look at the data, especially in cases where the user is attempting to apply statistical techniques to a database. Additionally, we are excited to give back to the open source community, and hope to merge our changes in with the main BlinkDB repository after the project is complete.
+By extending BlinkDB to include linear matrix operations, we hope to allow users to generate more expressive queries in a shorter time period on large datasets. Current aggregate functions offer a limited look at the data, especially in cases where the user is attempting to apply statistical techniques to a database. Additionally, we are excited to give back to the open source community, and hope to merge our changes in with the main BlinkDB repository after the project is complete.
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
