@@ -2,6 +2,19 @@
 
 cd hive_blinkdb
 ant package
+rc=$?
+if [[ $rc != 0 ]] ; then
+    cd ..
+    exit $rc
+fi
+
 cd ..
+
 sbt/sbt package
+rc=$?
+if [[ $rc != 0 ]] ; then
+    cd ..
+    exit $rc
+fi
+
 ./bin/blinkdb

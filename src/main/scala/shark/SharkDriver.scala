@@ -173,7 +173,7 @@ private[shark] class SharkDriver(conf: HiveConf) extends Driver(conf) with LogHe
     val queryState = new SharkDriver.QueryState
 
     var _cmd = cmd.toLowerCase()
-    if ((_cmd contains "approx_sum") || (_cmd contains "approx_count")) {
+    if ((_cmd contains "approx_sum") || (_cmd contains "approx_count") || (_cmd contains "err_approx_ols")) {
 
       val sampleSize = SharkConfVars.getLongVar(conf, SharkConfVars.SAMPLE_SIZE)
       val datasetSize = SharkConfVars.getLongVar(conf, SharkConfVars.DATASET_SIZE)
@@ -192,19 +192,11 @@ private[shark] class SharkDriver(conf: HiveConf) extends Driver(conf) with LogHe
             "Please use set blinkdb.dataset.size=<rows> to set Sample Size")
       }
 
-      var cmd_splits = _cmd.split(')')
-      var cmd_temp = ""
-      for ( x <- cmd_splits ) {
-        if ( x contains "approx" ) {
-          cmd_temp = cmd_temp + x +  " , " + sampleSize + " , " + datasetSize + " ) "
-        } else if ( x contains "(" ) {
-            cmd_temp = cmd_temp + x + " ) "
-        } else {
-            cmd_temp = cmd_temp + x
-        }
-      }
-
-      _cmd = cmd_temp
+      val cmd_splits = _cmd.split(')')
+      val new_seg = cmd_splits(cmd_splits.length-2) + "," + sampleSize + "," + datasetSize
+      val (left, right) = cmd_splits.splitAt(cmd_splits.length-2)
+      val new_cmd = left ++ Array(new_seg) ++ right.drop(1)
+      _cmd = new_cmd.mkString(")")
     }
     
     logInfo(_cmd)
