@@ -171,32 +171,37 @@ private[shark] class SharkDriver(conf: HiveConf) extends Driver(conf) with LogHe
 
     //holder for parent command type/string when executing reentrant queries
     val queryState = new SharkDriver.QueryState
-
     var _cmd = cmd.toLowerCase()
-    if ((_cmd contains "approx_sum") || (_cmd contains "approx_count") || (_cmd contains "err_approx_ols")) {
+    
+    if ((_cmd contains "approx_sum") || 
+        (_cmd contains "approx_count") || 
+        (_cmd contains "err_approx_ols")) {
+        
+        val sampleSize = SharkConfVars.getLongVar(conf, SharkConfVars.SAMPLE_SIZE)
+        val datasetSize = SharkConfVars.getLongVar(conf, SharkConfVars.DATASET_SIZE)
 
-      val sampleSize = SharkConfVars.getLongVar(conf, SharkConfVars.SAMPLE_SIZE)
-      val datasetSize = SharkConfVars.getLongVar(conf, SharkConfVars.DATASET_SIZE)
+        if (sampleSize == 0) {
+            errorMessage = "FAILED: Hive Internal Error: Sample Size not set"
+            logError(errorMessage + "\n" +
+                "Please use set blinkdb.sample.size=<rows> to set Sample Size")
+        }
 
-      if (sampleSize == 0)
-      {
-        errorMessage = "FAILED: Hive Internal Error: Sample Size not set"
-        logError(errorMessage + "\n" +
-            "Please use set blinkdb.sample.size=<rows> to set Sample Size")
-      }
-          
-      if (datasetSize == 0)
-      {
-        errorMessage = "FAILED: Hive Internal Error: Dataset Size not set"
-        logError(errorMessage + "\n" +
-            "Please use set blinkdb.dataset.size=<rows> to set Sample Size")
-      }
-
-      val cmd_splits = _cmd.split(')')
-      val new_seg = cmd_splits(cmd_splits.length-2) + "," + sampleSize + "," + datasetSize
-      val (left, right) = cmd_splits.splitAt(cmd_splits.length-2)
-      val new_cmd = left ++ Array(new_seg) ++ right.drop(1)
-      _cmd = new_cmd.mkString(")")
+        if (datasetSize == 0) {
+            errorMessage = "FAILED: Hive Internal Error: Dataset Size not set"
+            logError(errorMessage + "\n" +
+                "Please use set blinkdb.dataset.size=<rows> to set Sample Size")
+        }
+ 
+        val cmd_splits = _cmd.split(')')
+        val f : String => String = {
+            case s if (s contains "approx_sum") || 
+                      (s contains "approx_count") || 
+                      (s contains "err_approx_ols") => (s + "," + sampleSize + "," + datasetSize) 
+            case s => s
+        }
+        
+        val cmds_out = for (s <- cmd_splits) yield f(s)
+        _cmd = cmds_out.mkString(")")
     }
     
     logInfo(_cmd)
