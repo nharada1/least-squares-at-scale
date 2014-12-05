@@ -174,8 +174,7 @@ private[shark] class SharkDriver(conf: HiveConf) extends Driver(conf) with LogHe
     var _cmd = cmd.toLowerCase()
     
     if ((_cmd contains "approx_sum") || 
-        (_cmd contains "approx_count") || 
-        (_cmd contains "err_approx_ols")) {
+        (_cmd contains "approx_count")) {
         
         val sampleSize = SharkConfVars.getLongVar(conf, SharkConfVars.SAMPLE_SIZE)
         val datasetSize = SharkConfVars.getLongVar(conf, SharkConfVars.DATASET_SIZE)
@@ -195,8 +194,7 @@ private[shark] class SharkDriver(conf: HiveConf) extends Driver(conf) with LogHe
         val cmd_splits = _cmd.split(')')
         val f : String => String = {
             case s if (s contains "approx_sum") || 
-                      (s contains "approx_count") || 
-                      (s contains "err_approx_ols") => (s + "," + sampleSize + "," + datasetSize) 
+                      (s contains "approx_count") => (s + "," + sampleSize + "," + datasetSize) 
             case s => s
         }
         
