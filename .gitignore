@@ -7,7 +7,6 @@ TempStatsStore
 work/
 run-tests-from-scratch-workspace/
 
-conf/shark-env.sh
 conf/blinkdb-env.sh
 
 # Compiled Source
