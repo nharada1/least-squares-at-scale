@@ -11,11 +11,12 @@ coeffs = table2array(coeffs);
 for i=1:size(coeffs, 1)
     err(i) = mean((coeffs(i,:)-correct).^2);
 end
-loglog(sizes, err, 'k-+','MarkerSize',10)
-axis([950 10000050 0 1e-3])
+semilogx(sizes, err, 'k-+','MarkerSize',10)
+axis([950 10000050 0 0.7e-3])
 xlabel('Table Size')
 ylabel('Coefficient Mean Square Error')
 title('Coefficient True Accuaracy vs Sample Size')
+print('accuracy', '-depsc')
 
 %% Plot confidence intervals
 figure()
@@ -24,11 +25,12 @@ cis = table2array(cis);
 for i=1:size(cis, 1)
     confidences(i) = sum(cis(i,:));
 end
-loglog(sizes, confidences, 'k-+','MarkerSize',10)
+semilogx(sizes, confidences, 'k-+','MarkerSize',10)
 axis([950 10000050 0 2])
 xlabel('Table Size')
-ylabel('Sum of Confidence Intervals')
-title('Coefficient Confidence Intervals vs Sample Size')
+ylabel('Sum of Confidence Interval Width')
+title('Confidence Interval Width vs Sample Size')
+print('confidence', '-depsc')
 
 %% Plot runtime
 figure()
@@ -41,6 +43,8 @@ axis([950 10000050 0 1e4])
 xlabel('Table Size')
 ylabel('Runtime (s)')
 title('Runtime vs Sample Size')
+legend('Approximation', 'Confidence Intervals')
+print('runtime', '-depsc')
 
 %% Set Plot Options
 set(gca, ...
