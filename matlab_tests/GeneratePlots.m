@@ -12,23 +12,31 @@ for i=1:size(coeffs, 1)
     err(i) = mean((coeffs(i,:)-correct).^2);
 end
 semilogx(sizes, err, 'k-+','MarkerSize',10)
-axis([950 10000050 0 0.7e-3])
-xlabel('Table Size')
-ylabel('Coefficient Mean Square Error')
+xlabel('Table Size (Rows)')
+set(0,'DefaultTextInterpreter', 'latex')
+ylabel('Coefficient MSE - $E[ (\beta-\hat\beta)^2 ]$')
 title('Coefficient True Accuaracy vs Sample Size')
 print('accuracy', '-depsc')
+ax1 = gca;
+axis(ax1, [950 10000050 0 0.7e-3])
+ax1_pos = ax1.Position;
+ax2 = axes('Position',ax1_pos,...
+    'XAxisLocation','top',...
+    'Color','none');
+set(ax2, 'xscale', 'linear')
+axis(ax2, [0 1 0 0.7e-3])
 
 %% Plot confidence intervals
 figure()
 cis = data(:, {'CB1', 'CB2', 'CB3'});
 cis = table2array(cis);
 for i=1:size(cis, 1)
-    confidences(i) = sum(cis(i,:));
+    confidences(i) = mean(cis(i,:));
 end
 semilogx(sizes, confidences, 'k-+','MarkerSize',10)
-axis([950 10000050 0 2])
-xlabel('Table Size')
-ylabel('Sum of Confidence Interval Width')
+axis([950 10000050 0 0.7])
+xlabel('Table Size (Rows)')
+ylabel('Average Confidence Interval Width')
 title('Confidence Interval Width vs Sample Size')
 print('confidence', '-depsc')
 
@@ -40,20 +48,8 @@ loglog(sizes, times(:, 1), 'k--+','MarkerSize',10)
 hold on;
 loglog(sizes, times(:, 2), 'k-x','MarkerSize',10)
 axis([950 10000050 0 1e4])
-xlabel('Table Size')
+xlabel('Table Size (rows)')
 ylabel('Runtime (s)')
 title('Runtime vs Sample Size')
 legend('Approximation', 'Confidence Intervals')
 print('runtime', '-depsc')
-
-%% Set Plot Options
-set(gca, ...
-  'Box'         , 'off'     , ...
-  'TickDir'     , 'out'     , ...
-  'TickLength'  , [.02 .02] , ...
-  'XMinorTick'  , 'on'      , ...
-  'YMinorTick'  , 'on'      , ...
-  'XColor'      , [.3 .3 .3], ...
-  'YColor'      , [.3 .3 .3], ...
-  'LineWidth'   , 1         );
-set(0,'DefaultAxesFontSize',12)
