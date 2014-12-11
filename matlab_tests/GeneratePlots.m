@@ -12,19 +12,17 @@ for i=1:size(coeffs, 1)
     err(i) = mean((coeffs(i,:)-correct).^2);
 end
 semilogx(sizes, err, 'k-+','MarkerSize',10)
-xlabel('Table Size (Rows)')
-set(0,'DefaultTextInterpreter', 'latex')
-ylabel('Coefficient MSE - $E[ (\beta-\hat\beta)^2 ]$')
+axis([950 10000050 0 0.7E-3])
+xlabel('Table Size (Percentage)')
+ylabel('Coefficient MSE')
 title('Coefficient True Accuaracy vs Sample Size')
-print('accuracy', '-depsc')
-ax1 = gca;
-axis(ax1, [950 10000050 0 0.7e-3])
-ax1_pos = ax1.Position;
-ax2 = axes('Position',ax1_pos,...
-    'XAxisLocation','top',...
-    'Color','none');
-set(ax2, 'xscale', 'linear')
-axis(ax2, [0 1 0 0.7e-3])
+set(gca, 'XTickLabel', str2mat('0.01%', '0.1%', '1%', '10%', '100%'))
+
+% set(gcf, 'PaperUnits', 'inches');
+% x_width=3 ;y_width=3
+% set(gcf, 'PaperPosition', [0 0 x_width y_width]); 
+saveas(gcf,'accuracy.png')
+%print('accuracy', '-depsc')
 
 %% Plot confidence intervals
 figure()
@@ -35,10 +33,12 @@ for i=1:size(cis, 1)
 end
 semilogx(sizes, confidences, 'k-+','MarkerSize',10)
 axis([950 10000050 0 0.7])
-xlabel('Table Size (Rows)')
+xlabel('Table Size (Percentage)')
 ylabel('Average Confidence Interval Width')
 title('Confidence Interval Width vs Sample Size')
-print('confidence', '-depsc')
+set(gca, 'XTickLabel', str2mat('0.01%', '0.1%', '1%', '10%', '100%'))
+saveas(gcf,'confidence.png')
+% print('confidence', '-depsc')
 
 %% Plot runtime
 figure()
@@ -48,8 +48,10 @@ loglog(sizes, times(:, 1), 'k--+','MarkerSize',10)
 hold on;
 loglog(sizes, times(:, 2), 'k-x','MarkerSize',10)
 axis([950 10000050 0 1e4])
-xlabel('Table Size (rows)')
+xlabel('Table Size (Percentage)')
 ylabel('Runtime (s)')
 title('Runtime vs Sample Size')
+set(gca, 'XTickLabel', str2mat('0.01%', '0.1%', '1%', '10%', '100%'))
 legend('Approximation', 'Confidence Intervals')
-print('runtime', '-depsc')
+saveas(gcf,'runtime.png')
+%print('runtime', '-depsc')

@@ -28,7 +28,7 @@ for i=1:numel(N)
 end
 plot(results)
 
-%%
+%% Run this to generate synthetic data
 N = 10e6;
 bhat = [1,-2,3];
 mu = 0;

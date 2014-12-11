@@ -1,0 +1,62 @@
+Installing BlinkDB is not an easy process. This document will contain large amounts of the text from https://github.com/sameeragarwal/blinkdb/wiki/Running-BlinkDB-Locally
+
+To run BlinkDB requires 2 major components:
+
+* BlinkDB
+* Hive, modified for BlinkDB
+
+You will need the following software dependencies on your machine to install these programs:
+
+* Scala 2.10 (This version is required, later versions will not build!)
+* git
+* Java JDK
+* Spark (Tested on 1.1.0)
+
+Building Spark:
+If you do not have Spark installed, follow these instructions to build it. Download Spark from https://spark.apache.org/downloads.html. We suggest using version 1.1.0, as newer versions have not been tested. Spark should be installed from a separate folder than your BlinkDB install. After downloading, change directory to the Spark root directory and run:
+
+	$ sbt/sbt publish local
+
+Building BlinkDB:
+Start by cloning our BlinkDB code:
+
+	$ git clone https://github.com/nharada1/blinkdb.git
+
+BlinkDB requires a patched Hive submodule:
+
+	$ cd blinkdb
+	$ git submodule init
+	$ git submodule update
+
+You will also need to modify the configuration files before build. Create a copy of the sample configuration file:
+
+	$ cd blinkdb/conf
+	$ cp blinkdb-env.sh.template blinkdb-env.sh
+
+Edit blinkdb/conf/blinkdb-env.sh and set the following options (note this is different from the wiki):
+
+	#!/usr/bin/env bash
+
+	export SCALA_HOME="/path/to/scala"
+	export SCALA_VERSION=2.10
+	export SPARK_HOME="/path/to/spark"
+	export HADOOP_HOME=""
+	export JAVA_HOME="/path/to/java/home"
+	export HIVE_DEV_HOME="/path/to/hive/submodule"
+	export HIVE_HOME="$HIVE_DEV_HOME/build/dist"
+
+	SPARK_JAVA_OPTS=" -Dspark.local.dir=/tmp "
+	SPARK_JAVA_OPTS+="-Dspark.kryoserializer.buffer.mb=10 "
+	SPARK_JAVA_OPTS+="-verbose:gc -XX:-PrintGCDetails -XX:+PrintGCTimeStamps "
+	export SPARK_JAVA_OPTS
+
+Once your system is setup, run  
+
+	$ sh blinkdb/build
+
+Which should build Hive, BlinkDB, and then launch the BlinkDB CLI. If this process fails, you can build each component separately via:
+
+	$ cd hive_blinkdb
+	$ ant package
+	$ cd ..
+	$ sbt/sbt package
