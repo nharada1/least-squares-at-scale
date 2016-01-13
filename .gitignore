@@ -6,6 +6,7 @@ lib_managed/
 TempStatsStore
 work/
 run-tests-from-scratch-workspace/
+matlab_tests/
 
 conf/blinkdb-env.sh
 
