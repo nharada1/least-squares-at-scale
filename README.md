@@ -1,4 +1,12 @@
-![BlinkDB](http://blinkdb.org/figures/blinkdb-logo-withaffiliations.png)
+## Least Squares at Scale
+
+Least Squares at Scale is a UDAF extension to BlinkDB for performing linear regression on very large data 
+sets. By leveraging the underlying BlinkDB sampling abilities, we can perform accurate least squares in near
+realtime on large HDFS datasets, as well as provide confidence intervals. Least squares at scale is able to 
+both train as well as apply linear regression. For more information, see [the whitepaper]()
+
+![Runtimes](https://raw.githubusercontent.com/nharada1/least-squares-at-scale/master/papers/runtime.png)
+
 #### Queries with Bounded Errors and Bounded Response Times on Very Large Data
 
 BlinkDB is a large-scale data warehouse system built on Shark and Spark and is designed to be
